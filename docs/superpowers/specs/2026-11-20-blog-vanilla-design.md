@@ -56,7 +56,7 @@ blog-vanilla/
 ```text
 1. 글 읽기·검증 (lib/posts)            틀리면 빌드 중단
 2. routes.ts가 URL 목록 생성             /, /<slug>, /post/<tag>/<page>, /about, 각각 /en/...
-3. URL마다 페이지 함수 → HTML 문자열 → dist/<url>/index.html
+3. URL마다 페이지 함수 → HTML 문자열 → dist/<url>.html (/ 는 index.html)
 4. sitemap.xml, robots.txt, 404.html
 5. tailwindcss CLI → dist/styles.css
 6. tsc → src/client/*.ts → dist/js/*.js   번들 없이 ES 모듈
@@ -66,6 +66,7 @@ blog-vanilla/
 - 서버, API, 환경변수, 런타임 데이터 요청이 없다. blog와 같다
 - `lib/`은 Next 전용 import만 걷어내고 테스트까지 함께 가져온다
 - URL 구조는 blog와 같아야 한다. 다르면 SEO가 깨진다
+- 파일 이름도 Next export(`trailingSlash: false`)와 같게 `about.html`, `en.html`, `post/all/1.html`로 쓴다. `about/index.html`로 쓰면 Cloudflare Pages가 `/about`을 `/about/`으로 리다이렉트해 URL이 바뀐다
 
 ## 2. JSX 런타임과 클라이언트 동작
 
@@ -103,7 +104,7 @@ JS:    document.querySelectorAll('[data-island="search"]') → 이벤트 연결
 
 ```text
 1. 전체 빌드 → dist/
-2. node:http로 dist/ 서빙 (/foo → /foo/index.html, 없으면 404.html)
+2. node:http로 dist/ 서빙 (/foo → /foo.html, 없으면 404.html. Cloudflare Pages와 같은 규칙)
 3. fs.watch로 감시
    content/, src/(client 제외)  → 전체 빌드를 자식 프로세스로 다시 실행
    src/client/                  → tsc만
